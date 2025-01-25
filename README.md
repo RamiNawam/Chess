@@ -1,6 +1,6 @@
 # Welcome to My Special Chess Platform
 
-Experience chess like never before with our unique platform offering two engaging modes: Player vs. Player (PvP) and AI.
+Train to become a better chess player with my two engaging modes: Player vs. Player (PvP) and player vs. AI.
 
 ## Game Modes:
 
