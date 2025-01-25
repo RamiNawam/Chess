@@ -16,7 +16,7 @@ To-Do List for PvP Mode:
  -Promote to Other Than Queen: Allow pawn promotion to any piece, not just the queen.
 
  
-2)AI Mode
+2) AI Mode
 Test your skills against my AI, I bet you wont win a single game
 To-Do List for AI Mode:
 
