@@ -10,7 +10,7 @@ Challenge a friend in real-time and showcase your strategic prowess. The PvP mod
 
 **To-Do List for PvP Mode:**
 
-- **Fix King Available Spots:** Ensure the king can only move to valid positions, avoiding checks.
+- **Fix King Available Spots:** Ensure the king can only move to valid positions, avoiding checks.  FIXED
 - **Implement Castling:** Enable the special king and rook move under the correct conditions.
 - **Detect Checkmate and End Game:** Accurately determine when a player is in checkmate and conclude the game appropriately.
 - **Implement Draw Conditions:** Recognize draw scenarios, including threefold repetition and stalemate.
@@ -23,5 +23,6 @@ Test your skills against my AI; I bet you won't win a single game.
 
 **To-Do List for AI Mode:**
 
-- **Add Opening Moves from Chess Book:** Integrate a library of established opening moves for the first five turns to enhance AI performance.
-- **Enhance AI Intelligence and Speed:** Improve the AI's decision-making algorithms for deeper and faster computations, resulting in a more formidable opponent.
+- **Bring back the actual fixed AI and replace the random part to continue testing
+- **Add Opening Moves from Chess Book
+- **Improve the AI's decision-making algorithms for deeper and faster computations
