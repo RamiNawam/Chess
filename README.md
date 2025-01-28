@@ -24,5 +24,6 @@ Test your skills against my AI; I bet you won't win a single game.
 **To-Do List for AI Mode:**
 
 - **Bring back the actual fixed AI and replace the random part to continue testing
+- **fix the checkmate pop-up
 - **Add Opening Moves from Chess Book
 - **Improve the AI's decision-making algorithms for deeper and faster computations
