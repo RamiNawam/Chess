@@ -1,3 +1,4 @@
+
 import pygame
 import sys
 
@@ -281,7 +282,7 @@ class Main:
                         sys.exit()
 
                     # Select the best move
-                    best_move = ai.get_best_move(all_moves)
+                    best_move = ai.get_best_move(board)
 
                     if best_move:
                         initial = best_move.initial

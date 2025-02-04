@@ -11,6 +11,7 @@ class Board:
     def __init__(self):
         self.squares = [[0, 0, 0, 0, 0, 0, 0, 0] for col in range(COLS)]
         self.last_move = None
+        self.next_player = 'white'  # Initialize the first player
         self._create()
         self._add_pieces('white')
         self._add_pieces('black')
@@ -57,6 +58,9 @@ class Board:
         # set last move
         self.last_move = move
 
+        # Switch the turn to the next player
+        self.next_player = 'black' if self.next_player == 'white' else 'white'
+
     def valid_move(self, piece, move):
         return move in piece.moves
 
@@ -79,20 +83,34 @@ class Board:
         
         piece.en_passant = True
 
-    def in_check(self, piece, move):
-        temp_piece = copy.deepcopy(piece)
-        temp_board = copy.deepcopy(self)
-        temp_board.move(temp_piece, move, testing=True)
-        
+    def in_check(self, color, *args, **kwargs):
+        king = self.get_king(color)
+        if not king:
+            return False
+
+        king_position = None
         for row in range(ROWS):
             for col in range(COLS):
-                if temp_board.squares[row][col].has_enemy_piece(piece.color):
-                    p = temp_board.squares[row][col].piece
-                    temp_board.calc_moves(p, row, col, check_safety=False)
-                    for m in p.moves:
-                        if isinstance(m.final.piece, King):
+                if self.squares[row][col].piece == king:
+                    king_position = (row, col)
+                    break
+            if king_position:
+                break
+
+        if not king_position:
+            return False
+
+        king_row, king_col = king_position
+
+        # Check for attacks from enemy pieces
+        for row in range(ROWS):
+            for col in range(COLS):
+                piece = self.squares[row][col].piece
+                if piece and piece.color != color:
+                    self.calc_moves(piece, row, col, check_safety=False)
+                    for move in piece.moves:
+                        if move.final.row == king_row and move.final.col == king_col:
                             return True
-        
         return False
 
     def calc_moves(self, piece, row, col, check_safety=True):
@@ -196,3 +214,83 @@ class Board:
 
         # king
         self.squares[row_other][4] = Square(row_other, 4, King(color))
+
+
+
+    def is_game_over(self):
+        """
+        Determines if the game is over due to checkmate or stalemate.
+        """
+        return self.is_checkmate() or self.is_stalemate()
+
+    def is_checkmate(self):
+        """
+        Checks if the current player is in checkmate.
+        """
+        if not self.in_check(self.next_player):
+            return False
+
+        all_moves = self.get_all_moves(self.next_player)
+        return len(all_moves) == 0
+
+    def is_stalemate(self):
+        """
+        Checks if the game is in a stalemate.
+        """
+        if self.in_check(self.next_player):
+            return False
+
+        all_moves = self.get_all_moves(self.next_player)
+        return len(all_moves) == 0
+
+    def get_all_moves(self, color):
+        """
+        Calculates all possible moves for the given color.
+        """
+        all_moves = []
+        for row in range(ROWS):
+            for col in range(COLS):
+                square = self.squares[row][col]
+                if square.has_piece() and square.piece.color == color:
+                    piece = square.piece
+                    self.calc_moves(piece, row, col, check_safety=True)
+                    all_moves.extend(piece.moves)
+        return all_moves
+
+    def get_king(self, color):
+        """
+        Finds and returns the king piece of the given color.
+        """
+        for row in range(ROWS):
+            for col in range(COLS):
+                square = self.squares[row][col]
+                if square.has_piece():
+                    piece = square.piece
+                    if isinstance(piece, King) and piece.color == color:
+                        return piece
+        return None
+
+
+def undo_move(self):
+    if self.last_move:
+        initial = self.last_move.initial
+        final = self.last_move.final
+        piece_moved = self.squares[final.row][final.col].piece
+        piece_captured = final.piece
+
+        # Revert the move
+        self.squares[initial.row][initial.col].piece = piece_moved
+        self.squares[final.row][final.col].piece = piece_captured
+
+        # If a pawn was promoted, revert it back to a pawn
+        if isinstance(piece_moved, Queen) and (initial.row == 1 or initial.row == 6):
+            self.squares[initial.row][initial.col].piece = Pawn(piece_moved.color)
+
+        # Update the moved status
+        piece_moved.moved = False
+
+        # Clear the last move
+        self.last_move = None
+
+        # Switch back the turn to the previous player
+        self.next_player = 'black' if self.next_player == 'white' else 'white'
