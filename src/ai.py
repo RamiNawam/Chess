@@ -10,9 +10,7 @@ class AIPlayer:
         self.depth = depth  # Depth of the minimax search
 
     def get_all_moves(self, board):
-        """
-        Calculate all possible moves for the AI's pieces.
-        """
+        
         all_moves = []
 
         for row in range(ROWS):
@@ -26,10 +24,7 @@ class AIPlayer:
         return all_moves
 
     def get_best_move(self, board):
-        """
-        Determine the best move using the Minimax algorithm.
-        If no best move is found, select a random move from all possible moves.
-        """
+       
         best_score = float('-inf')
         best_move = None
         all_moves = self.get_all_moves(board)
@@ -54,9 +49,7 @@ class AIPlayer:
         return best_move
 
     def minimax(self, board, depth, alpha, beta, is_maximizing):
-        """
-        Minimax algorithm with alpha-beta pruning.
-        """
+        
         if depth == 0 or board.is_game_over():
             return self.evaluate_board(board)
 
@@ -89,9 +82,7 @@ class AIPlayer:
             return min_eval
 
     def evaluate_board(self, board):
-        """
-        Evaluate the board state and return a score.
-        """
+        
         score = 0
         for row in range(ROWS):
             for col in range(COLS):
@@ -106,9 +97,7 @@ class AIPlayer:
         return score
 
     def get_piece_value(self, piece):
-        """
-        Assign a value to each piece type.
-        """
+        
         if piece.name == 'pawn':
             return 1
         elif piece.name in ['knight', 'bishop']:

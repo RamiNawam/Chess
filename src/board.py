@@ -218,15 +218,11 @@ class Board:
 
 
     def is_game_over(self):
-        """
-        Determines if the game is over due to checkmate or stalemate.
-        """
+      
         return self.is_checkmate() or self.is_stalemate()
 
     def is_checkmate(self):
-        """
-        Checks if the current player is in checkmate.
-        """
+       
         if not self.in_check(self.next_player):
             return False
 
@@ -234,9 +230,7 @@ class Board:
         return len(all_moves) == 0
 
     def is_stalemate(self):
-        """
-        Checks if the game is in a stalemate.
-        """
+        
         if self.in_check(self.next_player):
             return False
 
@@ -244,9 +238,7 @@ class Board:
         return len(all_moves) == 0
 
     def get_all_moves(self, color):
-        """
-        Calculates all possible moves for the given color.
-        """
+        
         all_moves = []
         for row in range(ROWS):
             for col in range(COLS):
@@ -258,9 +250,7 @@ class Board:
         return all_moves
 
     def get_king(self, color):
-        """
-        Finds and returns the king piece of the given color.
-        """
+       
         for row in range(ROWS):
             for col in range(COLS):
                 square = self.squares[row][col]

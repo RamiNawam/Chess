@@ -18,13 +18,13 @@ class Main:
         self.game = None  # Initialize later depending on the mode
 
     def draw_text(self, text, font, color, x, y, centered=False):
-        """Helper function to render text."""
+        
         surface = font.render(text, True, color)
         rect = surface.get_rect(center=(x, y) if centered else None)
         self.screen.blit(surface, rect if centered else (x, y))
 
     def draw_button(self, rect, text, font, color, text_color, border_color, border_radius=20):
-        """Helper function to render a button with text."""
+        
         pygame.draw.rect(self.screen, border_color, rect, border_radius=border_radius)
         pygame.draw.rect(self.screen, color, rect.inflate(-6, -6), border_radius=border_radius)
         self.draw_text(text, font, text_color, rect.centerx, rect.centery, centered=True)
