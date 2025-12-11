@@ -269,30 +269,24 @@ class Main:
 
             # AI's turn
                 elif game.next_player == 'black':
-                    # Get all possible moves for AI
-                    all_moves = ai.get_all_moves(board)
+                    legal_moves = board.get_all_moves('black')
 
-                    # Check for checkmate or stalemate
-                    if not all_moves:
-                        if board.in_check(board.get_king('black'), None):  # Check if Black is in check
+                    if not legal_moves:
+                        if board.in_check('black'):
                             print("Checkmate! White wins!")
                         else:
                             print("Stalemate! It's a draw!")
                         pygame.quit()
                         sys.exit()
 
-                    # Select the best move
-                    best_move = ai.get_best_move(board)
+                    ai_move = ai.choose_move(board)
+                    if ai_move:
+                        piece = board.squares[ai_move.initial.row][ai_move.initial.col].piece
+                        captured = board.squares[ai_move.final.row][ai_move.final.col].has_piece()
 
-                    if best_move:
-                        initial = best_move.initial
-                        final = best_move.final
-                        piece = board.squares[initial.row][initial.col].piece
-
-                        # Execute the move
-                        board.move(piece, best_move)
+                        board.move(piece, ai_move)
                         board.set_true_en_passant(piece)
-                        game.play_sound(captured=final.has_piece())
+                        game.play_sound(captured=captured)
                         game.next_turn()  # Switch to player's turn
 
             pygame.display.update()

@@ -113,6 +113,25 @@ class Board:
                             return True
         return False
 
+    def _is_move_safe(self, piece, move):
+        """
+        Simulate the move and ensure our king is not left in check.
+        This avoids mutating any long-term state like last_move.
+        """
+        initial_sq = self.squares[move.initial.row][move.initial.col]
+        final_sq = self.squares[move.final.row][move.final.col]
+        captured_piece = final_sq.piece
+
+        # do move
+        initial_sq.piece = None
+        final_sq.piece = piece
+        safe = not self.in_check(piece.color)
+        # undo move
+        initial_sq.piece = piece
+        final_sq.piece = captured_piece
+
+        return safe
+
     def calc_moves(self, piece, row, col, check_safety=True):
         """
         Optimized move calculation for all pieces.
@@ -125,7 +144,7 @@ class Board:
                 target_square = self.squares[r][c]
                 if target_square.isempty_or_enemy(piece.color):
                     move = Move(Square(row, col), Square(r, c, target_square.piece))
-                    if not check_safety or not self.in_check(piece, move):
+                    if not check_safety or self._is_move_safe(piece, move):
                         piece.add_move(move)
 
         def generate_straightline_moves(directions):
@@ -261,26 +280,28 @@ class Board:
         return None
 
 
-def undo_move(self):
-    if self.last_move:
+    def undo_move(self):
+        """
+        Undo the last move recorded in self.last_move.
+        This is mainly used by the AI search on cloned boards.
+        """
+        if not self.last_move:
+            return
+
         initial = self.last_move.initial
         final = self.last_move.final
         piece_moved = self.squares[final.row][final.col].piece
-        piece_captured = final.piece
+        captured_piece = final.piece
 
-        # Revert the move
+        # revert board
         self.squares[initial.row][initial.col].piece = piece_moved
-        self.squares[final.row][final.col].piece = piece_captured
+        self.squares[final.row][final.col].piece = captured_piece
 
-        # If a pawn was promoted, revert it back to a pawn
+        # revert pawn promotion (simple heuristic: promotion target always queen)
         if isinstance(piece_moved, Queen) and (initial.row == 1 or initial.row == 6):
             self.squares[initial.row][initial.col].piece = Pawn(piece_moved.color)
 
-        # Update the moved status
         piece_moved.moved = False
-
-        # Clear the last move
         self.last_move = None
-
-        # Switch back the turn to the previous player
+        # revert turn
         self.next_player = 'black' if self.next_player == 'white' else 'white'
